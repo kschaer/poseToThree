@@ -1,6 +1,9 @@
 let socket;
+let capture;
 function setup(){
   createCanvas(400, 400);
+  capture = createCapture(VIDEO);
+  capture.size(320,240);
   background(0);
   // Start a socket connection to the server
   // Some day we would run this server somewhere else
@@ -20,6 +23,7 @@ function setup(){
 }
 function draw(){
   //nothing here yet
+  image(capture, 0, 0, 320, 240)
 }
 function mouseDragged() {
   // Draw some white circles

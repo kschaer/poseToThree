@@ -25,11 +25,7 @@ function setup(){
       ellipse(data.x, data.y, 20, 20);
     }
   );
-  poser = createGrapics(400,300)
-  socket.on('pose', function(data){
-    console.log('got pose data')
 
-  })
   //graphics buffer
   pg = createGraphics(400,400)
   let options = {
@@ -45,7 +41,44 @@ function setup(){
   }
   //get posenet from CDN
   poseNet = ml5.poseNet(capture, options, gotPoses);
+  //graphics buffer for poses
+  poser = createGraphics(400,300)
+  socket.on('pose', function(data){
+    console.log('receiving pose data')
+    //function drawPosePoints() {
+
+      // Loop through all the poses detected
+      console.log(data)
+      for(let i = 0; i < data.length; i++) {
+        // For each pose detected, loop through all the keypoints
+        //console.log(poses[0].pose.keypoints)
+        for(let j = 0; j < data[i].pose.keypoints.length; j++) {
+          //console.log()
+          // A keypoint is an object describing a body part (like rightArm or leftShoulder)
+          let keypoint = data[i].pose.keypoints[j];
+          // Only draw an ellipse is the pose probability is bigger than 0.2
+          if (keypoint.score > 0.2) {
+            poser.ellipse(keypoint.position.x, keypoint.position.y, 10, 20);
+          }
+        }
+      }
+    //}
+  })
 }
+//callback for when the pose model updates
+function gotPoses(results) {
+  poser.fill(40,200,244);
+  poses = results;
+  sendKeyPoints(results)
+}
+function sendKeyPoints(poseData) {
+  // We are sending!
+  //console.log("sendKeyPoints...");
+
+  // Send that object to the socket
+  socket.emit('pose',poseData);
+}
+
 function drawKeypoints() {
   // Loop through all the poses detected
   for(let i = 0; i < poses.length; i++) {
@@ -77,10 +110,6 @@ function drawSkeleton() {
   }
 }
 
-// The callback that gets called every time there's an update from the model
-function gotPoses(results) {
-  poses = results;
-}
 
 
 function mouseDragged() {
@@ -114,6 +143,8 @@ function draw(){
   image(pg, 0, 0, 400, 400)
   drawKeypoints();
   drawSkeleton()
+  image(poser, 0, 0, 400, 300)
+
   // fill(200)
   // noStroke()
   // ellipse(mouseX,mouseY,20,20)

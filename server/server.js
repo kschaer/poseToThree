@@ -24,7 +24,7 @@ io.sockets.on('connection',
     socket.on('mouse',
       function(data) {
         // Data comes in as whatever was sent, including objects
-        console.log("Received: 'mouse' " + data.x + " " + data.y);
+        //console.log("Received: 'mouse' " + data.x + " " + data.y);
 
         // Send it to all other clients
         socket.broadcast.emit('mouse', data);
@@ -33,8 +33,12 @@ io.sockets.on('connection',
         // io.sockets.emit('message', "this goes to everyone");
 
       }
-    );
 
+    );
+          //broadcast poses via socket
+    socket.on('pose', function(data){
+      socket.broadcast.emit('pose', data)
+    })
     socket.on('disconnect', function() {
       console.log("Client has disconnected");
     });

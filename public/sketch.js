@@ -4,6 +4,8 @@ function setup(){
   createCanvas(400, 400);
   capture = createCapture(VIDEO);
   capture.size(320,240);
+  //hide the debug capture feed
+  capture.hide()
   background(0);
   // Start a socket connection to the server
   // Some day we would run this server somewhere else
@@ -20,16 +22,18 @@ function setup(){
       ellipse(data.x, data.y, 20, 20);
     }
   );
+  //graphics buffer
+  pg = createGraphics(400,400)
 }
-function draw(){
-  //nothing here yet
-  image(capture, 0, 0, 320, 240)
-}
+
 function mouseDragged() {
   // Draw some white circles
-  fill(255);
-  noStroke();
-  ellipse(mouseX,mouseY,20,20);
+  // fill(255);
+  // noStroke();
+  //ellipse(mouseX,mouseY,20,20);
+  pg.noStroke()
+  pg.fill(130,120,144)
+  pg.ellipse(mouseX,mouseY,20,20)
   // Send the mouse coordinates
   sendmouse(mouseX,mouseY);
 }
@@ -45,4 +49,13 @@ function sendmouse(xpos, ypos) {
 
   // Send that object to the socket
   socket.emit('mouse',data);
+}
+
+function draw(){
+  //nothing here yet
+  image(capture, 0, 0, 320, 240)
+  image(pg, 0, 0, 400, 400)
+  // fill(200)
+  // noStroke()
+  // ellipse(mouseX,mouseY,20,20)
 }

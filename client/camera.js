@@ -18,13 +18,12 @@ import * as posenet from '@tensorflow-models/posenet';
 // import dat from 'dat.gui';
 import Stats from 'stats.js';
 import {drawKeypoints, drawSkeleton} from './demo_util';
-import {animate} from './threeScene';
+import {animate, noseSphere} from './threeScene';
 const videoWidth = 600;
 const videoHeight = 500;
 const docWidth = window.innerWidth;
 const docHeight = window.innerHeight;
 const stats = new Stats();
-
 
 function isAndroid() {
   return /Android/i.test(navigator.userAgent);
@@ -45,7 +44,8 @@ function isMobile() {
 async function setupCamera() {
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     throw new Error(
-        'Browser API navigator.mediaDevices.getUserMedia not available');
+      'Browser API navigator.mediaDevices.getUserMedia not available'
+    );
   }
 
   const video = document.getElementById('video');
@@ -54,8 +54,8 @@ async function setupCamera() {
 
   const mobile = isMobile();
   const stream = await navigator.mediaDevices.getUserMedia({
-    'audio': false,
-    'video': {
+    audio: false,
+    video: {
       facingMode: 'user',
       width: mobile ? undefined : videoWidth,
       height: mobile ? undefined : videoHeight,
@@ -95,7 +95,7 @@ const guiState = {
     nmsRadius: 30.0,
   },
   output: {
-    showVideo: true,
+    showVideo: false,
     showSkeleton: true,
     showPoints: true,
   },
@@ -140,7 +140,7 @@ function detectPoseInRealTime(video, net) {
   async function poseDetectionFrame() {
     // Begin monitoring code for frames per second
     stats.begin();
-    // threejs
+    // threejs cube animation
     animate();
     // Scale an image down to a certain factor. Too large of an image will slow
     // down the GPU
@@ -151,13 +151,16 @@ function detectPoseInRealTime(video, net) {
     let minPoseConfidence;
     let minPartConfidence;
 
-        const pose = await guiState.net.estimateSinglePose(
-            video, imageScaleFactor, flipHorizontal, outputStride);
-        poses.push(pose);
+    const pose = await guiState.net.estimateSinglePose(
+      video,
+      imageScaleFactor,
+      flipHorizontal,
+      outputStride
+    );
+    poses.push(pose);
 
-        minPoseConfidence = +guiState.singlePoseDetection.minPoseConfidence;
-        minPartConfidence = +guiState.singlePoseDetection.minPartConfidence;
-
+    minPoseConfidence = +guiState.singlePoseDetection.minPoseConfidence;
+    minPartConfidence = +guiState.singlePoseDetection.minPartConfidence;
 
     ctx.clearRect(0, 0, videoWidth, videoHeight);
 
@@ -173,12 +176,13 @@ function detectPoseInRealTime(video, net) {
     // and draw the resulting skeleton and keypoints if over certain confidence
     // scores
 
-    nosex = poses[0].keypoints[0].position.x - videoWidth/2 + docWidth/2;
-    nosey = poses[0].keypoints[0].position.y - videoHeight/2 + docHeight/2;
+    nosex = poses[0].keypoints[0].position.x - videoWidth / 2 + docWidth / 2;
+    nosey = poses[0].keypoints[0].position.y - videoHeight / 2 + docHeight / 2;
     nose.style.left = `${nosex}px`;
     nose.style.top = `${nosey}px`;
     poses.forEach(({score, keypoints}) => {
-      //console.log(keypoints[0].position.x, nosey);
+      // console.log(keypoints[0].position.x, nosey);
+      noseSphere(nosex, nosey);
       if (score >= minPoseConfidence) {
         if (guiState.output.showPoints) {
           drawKeypoints(keypoints, minPartConfidence, ctx);
@@ -192,7 +196,8 @@ function detectPoseInRealTime(video, net) {
 
     // End monitoring code for frames per second
     stats.end();
-
+    // animate();
+    // requestAnimationFrame(animate);
     requestAnimationFrame(poseDetectionFrame);
   }
 
@@ -216,8 +221,9 @@ export async function bindPage() {
     video = await loadVideo();
   } catch (e) {
     let info = document.getElementById('info');
-    info.textContent = 'this browser does not support video capture,' +
-        'or this device does not have a camera';
+    info.textContent =
+      'this browser does not support video capture,' +
+      'or this device does not have a camera';
     info.style.display = 'block';
     throw e;
   }
@@ -227,7 +233,9 @@ export async function bindPage() {
   detectPoseInRealTime(video, net);
 }
 
-navigator.getUserMedia = navigator.getUserMedia ||
-    navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+navigator.getUserMedia =
+  navigator.getUserMedia ||
+  navigator.webkitGetUserMedia ||
+  navigator.mozGetUserMedia;
 // kick off the demo
 bindPage();

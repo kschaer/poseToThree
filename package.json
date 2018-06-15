@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "NODE_ENV=development parcel --no-hmr --open public/camera.html "
+    "watch": "NODE_ENV=development parcel --no-hmr --open public/index.html ",
+    "start-dev": "NODE_ENV=development parcel --no-hmr && node /server/server.js"
   },
   "author": "Kaitlin Schaer <kaitlin.schaer@gmail.com>",
   "license": "ISC",

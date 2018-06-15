@@ -1,34 +1,32 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Paperposes</title>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.dom.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.sound.js"></script>
-    <script type="text/javascript" src="posenet.js"></script>
-    <script src="https://unpkg.com/ml5" type="text/javascript"></script>
 
-    <style>
-      body {
-        padding: 0px;
-      }
-    </style>
-  </head>
-  <body>
-    <div>
-      <img src="https://cdn-images-1.medium.com/max/1600/1*SpWPwprVuNYhXs44iTSODg.png"/>
+<head>
+    <title>PoseNet - Camera Feed Demo</title>
+    <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <div id="info" style='display:none'>
     </div>
-      <div id='main' style='display:none'>
-          <video id="video" playsinline style=" -moz-transform: scaleX(-1);
-          -o-transform: scaleX(-1);
-          -webkit-transform: scaleX(-1);
-          transform: scaleX(-1);
-          display: none;
-          ">
-          </video>
-          <canvas id="output" />
-      </div>
-  </body>
+    <div id="loading">
+        Loading the model...
+    </div>
+
+    <div id='main' style='display:none'>
+        <video id="video" playsinline style=" -moz-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+        display: none;
+        ">
+        </video>
+        <div id="three"></div>
+        <canvas id="output" />
+    </div>
+    <div id='nose' />
+    <script type="application/javascript" src="../client/camera.js"></script>
+</body>
+
 </html>

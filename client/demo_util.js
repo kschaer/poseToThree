@@ -17,7 +17,7 @@
 import * as tf from '@tensorflow/tfjs';
 import * as posenet from '@tensorflow-models/posenet';
 
-const color = 'aqua';
+const color = 'white';
 const lineWidth = 2;
 
 function toTuple({y, x}) {

@@ -7,7 +7,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.dom.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.sound.js"></script>
-    <script type="text/javascript" src="sketch.js"></script>
+    <script type="text/javascript" src="posenet.js"></script>
     <script src="https://unpkg.com/ml5" type="text/javascript"></script>
 
     <style>
@@ -17,5 +17,18 @@
     </style>
   </head>
   <body>
+    <div>
+      <img src="https://cdn-images-1.medium.com/max/1600/1*SpWPwprVuNYhXs44iTSODg.png"/>
+    </div>
+      <div id='main' style='display:none'>
+          <video id="video" playsinline style=" -moz-transform: scaleX(-1);
+          -o-transform: scaleX(-1);
+          -webkit-transform: scaleX(-1);
+          transform: scaleX(-1);
+          display: none;
+          ">
+          </video>
+          <canvas id="output" />
+      </div>
   </body>
 </html>

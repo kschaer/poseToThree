@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "NODE_ENV=development parcel --no-hmr --open public/index.html "
   },
-  "author": "",
+  "author": "Kaitlin Schaer <kaitlin.schaer@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "@tensorflow-models/posenet": "^0.1.2",
@@ -20,6 +21,8 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-es2017": "^6.24.1",
     "clang-format": "^1.2.3",
-    "parcel-bundler": "^1.8.1"
+    "eslint": "^4.19.1",
+    "eslint-config-google": "^0.9.1",
+    "parcel-bundler": "~1.6.2"
   }
 }

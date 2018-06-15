@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "NODE_ENV=development parcel --no-hmr --open public/index.html "
+    "watch": "NODE_ENV=development parcel --no-hmr --open public/camera.html "
   },
   "author": "Kaitlin Schaer <kaitlin.schaer@gmail.com>",
   "license": "ISC",
@@ -13,7 +13,9 @@
     "@tensorflow-models/posenet": "^0.1.2",
     "@tensorflow/tfjs": "^0.11.6",
     "express": "^4.16.3",
-    "socket.io": "^2.1.1"
+    "socket.io": "^2.1.1",
+    "stats": "^1.0.0",
+    "stats.js": "^0.17.0"
   },
   "devDependencies": {
     "babel-plugin-transform-runtime": "^6.23.0",
@@ -21,8 +23,26 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-es2017": "^6.24.1",
     "clang-format": "^1.2.3",
+    "dat.gui": "^0.7.2",
     "eslint": "^4.19.1",
     "eslint-config-google": "^0.9.1",
     "parcel-bundler": "~1.6.2"
-  }
+  },
+  "eslintConfig": {
+    "extends": "google",
+    "rules": {
+      "require-jsdoc": 0,
+      "valid-jsdoc": 0
+    },
+    "env": {
+      "es6": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 8,
+      "sourceType": "module"
+    }
+  },
+  "eslintIgnore": [
+    "dist/"
+  ]
 }

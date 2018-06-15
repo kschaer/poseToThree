@@ -6,62 +6,65 @@ const imageElement = document.getElementById('cat');
 // load the posenet model
 
 
-
+//working with one image!!!
+/*
 export async function bindPage(){
   const net = await posenet.load();
 const pose = await net.estimateSinglePose(imageElement, scaleFactor, flipHorizontal, outputStride);
 console.log('pose?', pose)
 }
 bindPage()
-// const videoWidth = 600;
-// const videoHeight = 500;
-// const stats = new Stats();
+*/
 
-// function isAndroid() {
-//   return /Android/i.test(navigator.userAgent);
-// }
 
-// function isiOS() {
-//   return /iPhone|iPad|iPod/i.test(navigator.userAgent);
-// }
+const videoWidth = 600;
+const videoHeight = 500;
 
-// function isMobile() {
-//   return isAndroid() || isiOS();
-// }
+function isAndroid() {
+  return /Android/i.test(navigator.userAgent);
+}
 
-// async function setupCamera() {
-//   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-//     throw new Error(
-//         'Browser API navigator.mediaDevices.getUserMedia not available');
-//   }
+function isiOS() {
+  return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
 
-//   const video = document.getElementById('video');
-//   video.width = videoWidth;
-//   video.height = videoHeight;
+function isMobile() {
+  return isAndroid() || isiOS();
+}
 
-//   const mobile = isMobile();
-//   const stream = await navigator.mediaDevices.getUserMedia({
-//     'audio': false,
-//     'video': {
-//       facingMode: 'user',
-//       width: mobile ? undefined : videoWidth,
-//       height: mobile ? undefined : videoHeight,
-//     },
-//   });
-//   video.srcObject = stream;
+async function setupCamera() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    throw new Error(
+        'Browser API navigator.mediaDevices.getUserMedia not available');
+  }
 
-//   return new Promise((resolve) => {
-//     video.onloadedmetadata = () => {
-//       resolve(video);
-//     };
-//   });
-// }
-// async function loadVideo() {
-//   const video = await setupCamera();
-//   video.play();
+  const video = document.getElementById('video');
+  video.width = videoWidth;
+  video.height = videoHeight;
 
-//   return video;
-// }
+  const mobile = isMobile();
+  const stream = await navigator.mediaDevices.getUserMedia({
+    'audio': false,
+    'video': {
+      facingMode: 'user',
+      width: mobile ? undefined : videoWidth,
+      height: mobile ? undefined : videoHeight,
+    },
+  });
+  video.srcObject = stream;
+
+  return new Promise((resolve) => {
+    video.onloadedmetadata = () => {
+      resolve(video);
+    };
+  });
+}
+async function loadVideo() {
+  const video = await setupCamera();
+  video.play();
+
+  return video;
+}
 
 
 // //consts for posenet

@@ -15,12 +15,14 @@
  * =============================================================================
  */
 import * as posenet from '@tensorflow-models/posenet';
-import dat from 'dat.gui';
+// import dat from 'dat.gui';
 import Stats from 'stats.js';
 import {drawKeypoints, drawSkeleton} from './demo_util';
 import {animate} from './threeScene';
 const videoWidth = 600;
 const videoHeight = 500;
+const docWidth = window.innerWidth;
+const docHeight = window.innerHeight;
 const stats = new Stats();
 
 
@@ -123,6 +125,9 @@ function setupFPS() {
  * Feeds an image to posenet to estimate poses - this is where the magic
  * happens. This function loops with a requestAnimationFrame method.
  */
+const nose = document.getElementById('nose');
+let nosex;
+let nosey;
 function detectPoseInRealTime(video, net) {
   const canvas = document.getElementById('output');
   const ctx = canvas.getContext('2d');
@@ -167,7 +172,13 @@ function detectPoseInRealTime(video, net) {
     // For each pose (i.e. person) detected in an image, loop through the poses
     // and draw the resulting skeleton and keypoints if over certain confidence
     // scores
+
+    nosex = poses[0].keypoints[0].position.x - videoWidth/2 + docWidth/2;
+    nosey = poses[0].keypoints[0].position.y - videoHeight/2 + docHeight/2;
+    nose.style.left = `${nosex}px`;
+    nose.style.top = `${nosey}px`;
     poses.forEach(({score, keypoints}) => {
+      //console.log(keypoints[0].position.x, nosey);
       if (score >= minPoseConfidence) {
         if (guiState.output.showPoints) {
           drawKeypoints(keypoints, minPartConfidence, ctx);

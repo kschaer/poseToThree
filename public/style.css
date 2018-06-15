@@ -13,6 +13,17 @@
 }
 #output {
   position: absolute;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
   left: 0;
   z-index: 12;
+}
+#nose {
+  position: absolute;
+  z-index: 100;
+  background-color: lightcoral;
+  width: 20px;
+  height: 20px;
 }

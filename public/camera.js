@@ -18,10 +18,11 @@ import * as posenet from '@tensorflow-models/posenet';
 import dat from 'dat.gui';
 import Stats from 'stats.js';
 import {drawKeypoints, drawSkeleton} from './demo_util';
-
+import {animate} from './threeScene';
 const videoWidth = 600;
 const videoHeight = 500;
 const stats = new Stats();
+
 
 function isAndroid() {
   return /Android/i.test(navigator.userAgent);
@@ -132,10 +133,10 @@ function detectPoseInRealTime(video, net) {
   canvas.height = videoHeight;
 
   async function poseDetectionFrame() {
-
     // Begin monitoring code for frames per second
     stats.begin();
-
+    // threejs
+    animate();
     // Scale an image down to a certain factor. Too large of an image will slow
     // down the GPU
     const imageScaleFactor = guiState.input.imageScaleFactor;
@@ -170,6 +171,7 @@ function detectPoseInRealTime(video, net) {
       if (score >= minPoseConfidence) {
         if (guiState.output.showPoints) {
           drawKeypoints(keypoints, minPartConfidence, ctx);
+          // animate();
         }
         if (guiState.output.showSkeleton) {
           drawSkeleton(keypoints, minPartConfidence, ctx);

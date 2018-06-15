@@ -15,7 +15,8 @@
     "express": "^4.16.3",
     "socket.io": "^2.1.1",
     "stats": "^1.0.0",
-    "stats.js": "^0.17.0"
+    "stats.js": "^0.17.0",
+    "three": "^0.93.0"
   },
   "devDependencies": {
     "babel-plugin-transform-runtime": "^6.23.0",

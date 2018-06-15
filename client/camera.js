@@ -128,6 +128,8 @@ function setupFPS() {
 const nose = document.getElementById('nose');
 let nosex;
 let nosey;
+let wristx;
+let wristy;
 function detectPoseInRealTime(video, net) {
   const canvas = document.getElementById('output');
   const ctx = canvas.getContext('2d');
@@ -180,9 +182,14 @@ function detectPoseInRealTime(video, net) {
     nosey = poses[0].keypoints[0].position.y - videoHeight / 2 + docHeight / 2;
     nose.style.left = `${nosex}px`;
     nose.style.top = `${nosey}px`;
+    wristx = poses[0].keypoints[10].position.x - videoWidth / 2 + docWidth / 2;
+    wristy =
+      poses[0].keypoints[10].position.y - videoHeight / 2 + docHeight / 2;
+    noseSphere(nosex, nosey, wristx, wristy);
+
     poses.forEach(({score, keypoints}) => {
       // console.log(keypoints[0].position.x, nosey);
-      noseSphere(nosex, nosey);
+      // console.log(keypoints);
       if (score >= minPoseConfidence) {
         if (guiState.output.showPoints) {
           drawKeypoints(keypoints, minPartConfidence, ctx);

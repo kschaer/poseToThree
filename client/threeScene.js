@@ -11,8 +11,10 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 // document.body.appendChild(renderer.domElement);
 document.getElementById('three').appendChild(renderer.domElement);
 let geo = new THREE.BoxGeometry(1, 2, 3);
-let material = new THREE.MeshBasicMaterial({color: 0xccff00});
-let material2 = new THREE.MeshBasicMaterial({color: 0x22ffcc});
+// let material = new THREE.MeshBasicMaterial({color: 0xccff00});
+// let material2 = new THREE.MeshBasicMaterial({color: 0x22ffcc});
+let material = new THREE.MeshLambertMaterial({color: 0xccff00});
+let material2 = new THREE.MeshPhongMaterial({color: 0x22ffcc});
 let cube = new THREE.Mesh(geo, material);
 scene.add(cube);
 camera.position.z = 5;
@@ -29,16 +31,31 @@ let sphereGeometry = new THREE.SphereGeometry(1, 26, 26);
 let sphere = new THREE.Mesh(sphereGeometry, material2);
 // sphere.position.set(position);
 scene.add(sphere);
-export function noseSphere(posX, posY) {
-  position.set((posX / width) * 2 - 1, (posY / width) * 2 - 1, 0.5);
+let lightPos = new THREE.Vector3(0, 0, 0);
+let light = new THREE.PointLight(0xfffff, 1, 100);
+light.position.set(0, 0, 0);
+scene.add(light);
+
+export function noseSphere(posX, posY, wristX, wristY) {
+  position.set((posX / width) * 2 - 1, (posY / width) * 2 - 1, 5);
   position.unproject(camera);
   let dir = position.sub(camera.position).normalize();
   let distance = -camera.position.z / dir.z;
   let pos = camera.position.clone().add(dir.multiplyScalar(distance));
+
+  lightPos.set((wristX / width) * 2 - 1, (wristY / width) * 2 - 1, 5);
+  lightPos.unproject(camera);
+  let lightDir = lightPos.sub(camera.position).normalize();
+  let distanceLight = -camera.position.z / lightDir.z;
+  let posLight = camera.position
+    .clone()
+    .add(lightDir.multiplyScalar(distanceLight));
+
   // // console.log('making a sphere at', posX, posY);
   // position.x = (posX / width) * 2 - 1;
   // position.y = (posY / height) * 2 - 1;
   // position.z = 0;
+  light.position.set(posLight.x, -posLight.y, 5);
   return sphere.position.set(pos.x, -pos.y, pos.z);
   // console.log('sphere at:', pos);
 }
@@ -50,7 +67,8 @@ export function animate() {
     intersects[i].object.material.color.set(0xff0000);
   }
   // sphere.rotation.x += 2;
-  console.log('cube', cube.position, 'sphere', sphere.position);
+  //  console.log('cube', cube.position, 'sphere', sphere.position);
+  console.log('light', light.position);
   cube.rotation.x += 0.01;
   cube.rotation.y += 0.01;
   renderer.render(scene, camera);

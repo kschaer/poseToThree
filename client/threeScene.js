@@ -22,7 +22,7 @@ camera.position.z = 5;
 function onMouseMove(event) {
   mouse.x = (event.clientX / width) * 2 - 1;
   mouse.y = (event.clientY / height) * 2 + 1;
-  console.log(mouse.x, mouse.y);
+  // console.log(mouse.x, mouse.y);
 }
 window.addEventListener('mousemove', onMouseMove, false);
 

@@ -18,7 +18,8 @@ import * as posenet from '@tensorflow-models/posenet';
 // import dat from 'dat.gui';
 import Stats from 'stats.js';
 import {drawKeypoints, drawSkeleton} from './demo_util';
-import {animate, noseSphere} from './threeScene';
+// import {animate, noseSphere} from './threeScene';
+import {animateCloth} from './threeCloth';
 const videoWidth = 600;
 const videoHeight = 500;
 const docWidth = window.innerWidth;
@@ -143,7 +144,7 @@ function detectPoseInRealTime(video, net) {
     // Begin monitoring code for frames per second
     stats.begin();
     // threejs cube animation
-    animate();
+    // animate();
     // Scale an image down to a certain factor. Too large of an image will slow
     // down the GPU
     const imageScaleFactor = guiState.input.imageScaleFactor;
@@ -185,7 +186,7 @@ function detectPoseInRealTime(video, net) {
     wristx = poses[0].keypoints[10].position.x - videoWidth / 2 + docWidth / 2;
     wristy =
       poses[0].keypoints[10].position.y - videoHeight / 2 + docHeight / 2;
-    noseSphere(nosex, nosey, wristx, wristy);
+    // noseSphere(nosex, nosey, wristx, wristy);
 
     poses.forEach(({score, keypoints}) => {
       // console.log(keypoints[0].position.x, nosey);
@@ -205,6 +206,7 @@ function detectPoseInRealTime(video, net) {
     stats.end();
     // animate();
     // requestAnimationFrame(animate);
+    animateCloth();
     requestAnimationFrame(poseDetectionFrame);
   }
 

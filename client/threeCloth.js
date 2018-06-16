@@ -5,12 +5,19 @@ const renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize(window.innerWidth, window.innerHeight);
 const width = window.innerWidth;
 const height = window.innerHeight;
-const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-camera.position.z = 5;
+// const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(
+  30,
+  window.innerWidth / window.innerHeight,
+  1,
+  10000
+);
+// camera.position.z = 5;
+camera.position.set(1000, 50, 1500);
 document.getElementById('three').appendChild(renderer.domElement);
 
 // basic ambient and directional lights for testing
-scene.add(new THREE.AmbientLight(0x666666));
+scene.add(new THREE.AmbientLight(0x000000));
 let light = new THREE.DirectionalLight(0xdfebff);
 light.position.set(100, 5, 150);
 scene.add(light);
@@ -215,7 +222,7 @@ function simulate(time) {
 
   ballPosition.z = -Math.sin(Date.now() / 600) * 90; // + 40;
   ballPosition.x = Math.cos(Date.now() / 400) * 70;
-
+  /*
   if (sphere.visible) {
     for (
       particles = cloth.particles, i = 0, il = particles.length;
@@ -231,17 +238,17 @@ function simulate(time) {
         pos.copy(ballPosition).add(diff);
       }
     }
-  }
+  }*/
 
   // Floor Constraints
 
-  for (particles = cloth.particles, i = 0, il = particles.length; i < il; i++) {
-    particle = particles[i];
-    pos = particle.position;
-    if (pos.y < -250) {
-      pos.y = -250;
-    }
-  }
+  // for (particles = cloth.particles, i = 0, il = particles.length; i < il; i++) {
+  //   particle = particles[i];
+  //   pos = particle.position;
+  //   if (pos.y < -250) {
+  //     pos.y = -250;
+  //   }
+  // }
 
   // Pin Constraints
 
@@ -269,11 +276,12 @@ export function clothController(hands) {}
 let loader = new THREE.TextureLoader();
 let clothTexture = loader.load('../public/cloth1.jpg');
 clothTexture.anisotropy = 16;
-let clothMaterial = new THREE.MeshLambertMaterial({
-  map: clothTexture,
-  side: THREE.DoubleSide,
-  alphaTest: 0.5,
-});
+// let clothMaterial = new THREE.MeshLambertMaterial({
+//   map: clothTexture,
+//   side: THREE.DoubleSide,
+//   alphaTest: 0.5,
+// });
+let clothMaterial = new THREE.MeshBasicMaterial(0x00ffcc);
 let clothGeometry = new THREE.ParametricGeometry(
   clothFunction,
   cloth.w,
@@ -296,6 +304,7 @@ export function animateCloth() {
     Math.cos(time / 3000),
     Math.sin(time / 1000)
   );
+  console.log('animating cloth?');
   windForce.normalize();
   windForce.multiplyScalar(windStrength);
   simulate(time);
@@ -308,6 +317,7 @@ function render() {
     // update the cloth geometry to the new particle locations
     clothGeometry.vertices[i].copy(p[i].position);
   }
+  console.log(cloth.particles[10].position);
   clothGeometry.verticesNeedUpdate = true;
   clothGeometry.computeFaceNormals();
   clothGeometry.computeVertexNormals();

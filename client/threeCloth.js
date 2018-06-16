@@ -14,6 +14,8 @@ const camera = new THREE.PerspectiveCamera(
 );
 // camera.position.z = 5;
 camera.position.set(1000, 50, 1500);
+camera.up = new THREE.Vector3(0, 0, 1);
+
 document.getElementById('three').appendChild(renderer.domElement);
 
 // basic ambient and directional lights for testing
@@ -274,14 +276,16 @@ hands = {
 export function clothController(hands) {}
 // set up the cloth
 let loader = new THREE.TextureLoader();
-let clothTexture = loader.load('../public/cloth1.jpg');
+let clothTexture = loader.load('./circuit_pattern.png');
 clothTexture.anisotropy = 16;
-// let clothMaterial = new THREE.MeshLambertMaterial({
-//   map: clothTexture,
-//   side: THREE.DoubleSide,
-//   alphaTest: 0.5,
-// });
-let clothMaterial = new THREE.MeshBasicMaterial(0x00ffcc);
+let clothMaterial = new THREE.MeshLambertMaterial({
+  // map: clothTexture,
+  side: THREE.DoubleSide,
+  // alphaTest: 0.5,
+  color: 0x00ffcc,
+});
+
+// let clothMaterial = new THREE.MeshBasicMaterial(0x00ffcc);
 let clothGeometry = new THREE.ParametricGeometry(
   clothFunction,
   cloth.w,
@@ -291,6 +295,11 @@ let clothGeometry = new THREE.ParametricGeometry(
 let clothMesh = new THREE.Mesh(clothGeometry, clothMaterial);
 clothMesh.position.set(0, 0, 0);
 scene.add(clothMesh);
+clothMesh.customDepthMaterial = new THREE.MeshDepthMaterial({
+  depthPacking: THREE.RGBADepthPacking,
+  map: clothTexture,
+  alphaTest: 0.5,
+});
 
 // set up wind
 // let windForce = new THREE.Vector3(0, 0, 0);
@@ -317,10 +326,12 @@ function render() {
     // update the cloth geometry to the new particle locations
     clothGeometry.vertices[i].copy(p[i].position);
   }
-  console.log(cloth.particles[10].position);
+  console.log(cloth.particles[119].position, cloth.particles.length);
   clothGeometry.verticesNeedUpdate = true;
   clothGeometry.computeFaceNormals();
   clothGeometry.computeVertexNormals();
+  camera.lookAt(cloth.particles[0].position);
+
   // now send to renderer
   renderer.render(scene, camera);
 }

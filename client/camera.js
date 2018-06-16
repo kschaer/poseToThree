@@ -82,7 +82,7 @@ const guiState = {
   input: {
     mobileNetArchitecture: isMobile() ? '0.50' : '0.75',
     outputStride: 16,
-    imageScaleFactor: 0.5,
+    imageScaleFactor: 0.3,
   },
   singlePoseDetection: {
     minPoseConfidence: 0.1,

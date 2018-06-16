@@ -47,9 +47,11 @@ export function noseSphere(posX, posY, wristX, wristY) {
   lightPos.unproject(camera);
   let lightDir = lightPos.sub(camera.position).normalize();
   let distanceLight = -camera.position.z / lightDir.z;
+  // multiply the light position vector to make interaction more dramatic
+  let interactionMultiplier = 3;
   let posLight = camera.position
     .clone()
-    .add(lightDir.multiplyScalar(distanceLight));
+    .add(lightDir.multiplyScalar(distanceLight * interactionMultiplier));
 
   // // console.log('making a sphere at', posX, posY);
   // position.x = (posX / width) * 2 - 1;

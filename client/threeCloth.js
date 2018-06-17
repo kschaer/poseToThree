@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import * as POST from 'postprocessing';
 // import {simulate, clothFunction, Cloth} from './cloth.js';
 const scene = new THREE.Scene();
 // antialias and allow alpha so our scene can transparently render above video
@@ -7,6 +8,8 @@ renderer.setClearColor(0x000000, 0);
 renderer.setSize(window.innerWidth, window.innerHeight);
 const width = window.innerWidth;
 const height = window.innerHeight;
+// POST
+
 // IMAGES FOR TEXTURES -----------
 const fabricImg = require('../public/knit.jpg');
 // const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
@@ -20,6 +23,12 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0, 0, 1500);
 // camera.up = new THREE.Vector3(0, 1, 0);
 camera.lookAt(0, 0, 0);
+const composer = new POST.EffectComposer(renderer);
+composer.addPass(new POST.RenderPass(scene, camera));
+const bloom = new POST.BloomPass();
+const clock = new THREE.Clock();
+bloom.renderToScreen = true;
+composer.addPass(bloom);
 
 document.getElementById('three').appendChild(renderer.domElement);
 
@@ -380,5 +389,6 @@ function render() {
   clothGeometry.computeVertexNormals();
   // camera.lookAt(cloth.particles[0].position);
   // now send to renderer
-  renderer.render(scene, camera);
+  // renderer.render(scene, camera);
+  composer.render(clock.getDelta());
 }

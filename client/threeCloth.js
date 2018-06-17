@@ -14,7 +14,8 @@ const camera = new THREE.PerspectiveCamera(
 );
 // camera.position.z = 5;
 camera.position.set(1000, 50, 1500);
-camera.up = new THREE.Vector3(0, 0, 1);
+camera.up = new THREE.Vector3(0, 1, 0);
+camera.lookAt(125, 125, 0);
 
 document.getElementById('three').appendChild(renderer.domElement);
 
@@ -23,6 +24,47 @@ scene.add(new THREE.AmbientLight(0x000000));
 let light = new THREE.DirectionalLight(0xdfebff);
 light.position.set(100, 5, 150);
 scene.add(light);
+
+// sphere for debug
+let axesHelper = new THREE.AxesHelper(500);
+let sphereGeometry = new THREE.SphereGeometry(100);
+let sphere = new THREE.Mesh(
+  sphereGeometry,
+  new THREE.MeshBasicMaterial(0x0ffcc)
+);
+// sphere.position.set(position);
+let planeGeometry = new THREE.PlaneGeometry(500, 500);
+let material = new THREE.MeshBasicMaterial({
+  color: 0xffff00,
+  side: THREE.DoubleSide,
+});
+let debugPlane = new THREE.Mesh(planeGeometry, material);
+scene.add(debugPlane);
+scene.add(sphere);
+scene.add(axesHelper);
+
+// mouse listener and raycaster to get mouse position into scene
+const raycaster = new THREE.Raycaster();
+let mouse = new THREE.Vector2();
+// let spherePosition = new THREE.Vector3();
+let mousePos;
+function onMouseMove(event) {
+  mouse.x = (event.clientX / width) * 2 - 1;
+  mouse.y = (event.clientY / height) * 2 + 1;
+  // spherePosition.set()
+
+  let vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
+  vector.unproject(camera);
+  let mouseDir = vector.sub(camera.position).normalize();
+  let mouseDist = -camera.position.z / mouseDir.z;
+  mousePos = camera.position.clone().add(mouseDir.multiplyScalar(mouseDist));
+  sphere.position.set(-mousePos.x, mousePos.y, 0);
+
+  // clothMesh.position.copy(pos);
+  // console.log(mouse.x, mouse.y);
+  console.log('FIRINGMOUSEEVENT', sphere.position);
+}
+window.addEventListener('mousemove', onMouseMove, false);
 
 /* --------------------------------------------START CLOTH HELPERS----- */
 let DAMPING = 0.03;
@@ -257,9 +299,12 @@ function simulate(time) {
   for (i = 0, il = pins.length; i < il; i++) {
     let xy = pins[i];
     let p = particles[xy];
+
+    // console.log('what is xy?', p);
     p.position.copy(p.original);
     p.previous.copy(p.original);
   }
+  // mouse constraint?
 }
 
 /* ---------------------------------------------END CLOTH HELPERS---- */
@@ -305,6 +350,9 @@ clothMesh.customDepthMaterial = new THREE.MeshDepthMaterial({
 // let windForce = new THREE.Vector3(0, 0, 0);
 
 export function animateCloth() {
+  // raycaster to get mouse into scene
+  raycaster.setFromCamera(mouse, camera);
+  // console.log(raycaster);
   // simulate wind
   let time = Date.now();
   let windStrength = Math.sin(time / 10000) * 20;
@@ -313,10 +361,11 @@ export function animateCloth() {
     Math.cos(time / 3000),
     Math.sin(time / 1000)
   );
-  console.log('animating cloth?');
+  // console.log('animating cloth?');
   windForce.normalize();
   windForce.multiplyScalar(windStrength);
   simulate(time);
+
   render();
 }
 // send to the scene
@@ -326,12 +375,12 @@ function render() {
     // update the cloth geometry to the new particle locations
     clothGeometry.vertices[i].copy(p[i].position);
   }
-  console.log(cloth.particles[119].position, cloth.particles.length);
+  // console.log(cloth.particles[119].position, cloth.particles.length);
   clothGeometry.verticesNeedUpdate = true;
   clothGeometry.computeFaceNormals();
   clothGeometry.computeVertexNormals();
-  camera.lookAt(cloth.particles[0].position);
-
+  // camera.lookAt(cloth.particles[0].position);
+  console.log(cloth.particles[0].position);
   // now send to renderer
   renderer.render(scene, camera);
 }

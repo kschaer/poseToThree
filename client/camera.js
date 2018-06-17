@@ -134,10 +134,10 @@ function setupFPS() {
 const nose = document.getElementById('nose');
 let nosex;
 let nosey;
-let leftWristX;
-let leftWristY;
-let rightWristX;
-let rightWristY;
+let leftWristX = 0;
+let leftWristY = 0;
+let rightWristX = 0;
+let rightWristY = 0;
 function detectPoseInRealTime(video, net) {
   const canvas = document.getElementById('output');
   const ctx = canvas.getContext('2d');
@@ -190,14 +190,53 @@ function detectPoseInRealTime(video, net) {
     nosey = poses[0].keypoints[0].position.y - videoHeight / 2 + docHeight / 2;
     nose.style.left = `${nosex}px`;
     nose.style.top = `${nosey}px`;
-    leftWristX =
-      poses[0].keypoints[10].position.x - videoWidth / 2 + docWidth / 2;
-    leftWristY =
-      poses[0].keypoints[10].position.y - videoHeight / 2 + docHeight / 2;
-    rightWristX =
-      poses[0].keypoints[9].position.x - videoWidth / 2 + docWidth / 2;
-    rightWristY =
-      poses[0].keypoints[9].position.y - videoHeight / 2 + docHeight / 2;
+    // if we don't have points yet, find them:
+    if (!leftWristX || !leftWristY) {
+      leftWristX =
+        poses[0].keypoints[10].position.x - videoWidth / 2 + docWidth / 2;
+      leftWristY =
+        poses[0].keypoints[10].position.y - videoHeight / 2 + docHeight / 2;
+    }
+    if (!rightWristX || !rightWristY) {
+      rightWristX =
+        poses[0].keypoints[9].position.x - videoWidth / 2 + docWidth / 2;
+      rightWristY =
+        poses[0].keypoints[9].position.y - videoHeight / 2 + docHeight / 2;
+    }
+    // conditional logic to help filter out bad pose detection
+    // if we have a prior point value and the new point value is not vastly different from the prior value, we can send
+    if (
+      leftWristX &&
+      leftWristY &&
+      Math.abs(
+        leftWristX -
+          poses[0].keypoints[10].position.x -
+          videoWidth / 2 +
+          docWidth / 2
+      ) < 100
+    ) {
+      console.log('RESETTING LEFT');
+      leftWristX =
+        poses[0].keypoints[10].position.x - videoWidth / 2 + docWidth / 2;
+      leftWristY =
+        poses[0].keypoints[10].position.y - videoHeight / 2 + docHeight / 2;
+    } // else we don't reset the points
+    if (
+      rightWristX &&
+      rightWristY &&
+      Math.abs(
+        rightWristX -
+          poses[0].keypoints[9].position.x -
+          videoWidth / 2 +
+          docWidth / 2
+      ) < 100
+    ) {
+      rightWristX =
+        poses[0].keypoints[9].position.x - videoWidth / 2 + docWidth / 2;
+      rightWristY =
+        poses[0].keypoints[9].position.y - videoHeight / 2 + docHeight / 2;
+    } // else we don't reset the points
+
     // noseSphere(nosex, nosey, leftWristX, leftWristY);
     // console.log(poses[0].keypoints);
     poses.forEach(({score, keypoints}) => {

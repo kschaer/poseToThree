@@ -1,10 +1,14 @@
 import * as THREE from 'three';
 // import {simulate, clothFunction, Cloth} from './cloth.js';
 const scene = new THREE.Scene();
-const renderer = new THREE.WebGLRenderer({antialias: true});
+// antialias and allow alpha so our scene can transparently render above video
+const renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
+renderer.setClearColor(0x000000, 0);
 renderer.setSize(window.innerWidth, window.innerHeight);
 const width = window.innerWidth;
 const height = window.innerHeight;
+// IMAGES FOR TEXTURES -----------
+const fabricImg = require('./icelandic.png');
 // const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
 const camera = new THREE.PerspectiveCamera(
   30,
@@ -30,7 +34,7 @@ scene.add(light);
 let sphereGeometry = new THREE.SphereGeometry(10);
 let sphere = new THREE.Mesh(
   sphereGeometry,
-  new THREE.MeshBasicMaterial(0x0ffcc)
+  new THREE.MeshBasicMaterial({color: 0x00ff00})
 );
 
 scene.add(sphere);
@@ -289,8 +293,13 @@ function simulate(time) {
   let movingPin = particles[pins[pins.length - 1]];
   // movingPin.position.copy(spherePosition);
   movingPin.position.set(rightWrist.x, rightWrist.y, 0);
+  // let target = new THREE.Vector3(rightWrist.x, rightWrist.y, 0);
+  // let target2 = new THREE.Vector3(leftWrist.x, leftWrist.y, 0);
+  // movingPin.position.lerp(target, 0.2);
   let movingLeftPin = particles[pins[0]];
   movingLeftPin.position.set(leftWrist.x, leftWrist.y, 0);
+  // movingLeftPin.position.lerp(target2, 0.2);
+
   // console.log('MOVING PIN', movingPin.position);
   // mouse constraint?
 }
@@ -309,13 +318,13 @@ hands = {
 export function clothController(hands) {}
 // set up the cloth
 let loader = new THREE.TextureLoader();
-let clothTexture = loader.load('./circuit_pattern.png');
+let clothTexture = loader.load(fabricImg);
 clothTexture.anisotropy = 16;
 let clothMaterial = new THREE.MeshLambertMaterial({
-  // map: clothTexture,
+  map: clothTexture,
   side: THREE.DoubleSide,
-  // alphaTest: 0.5,
-  color: 0x00ffcc,
+  alphaTest: 0.5,
+  // color: 0x00ffcc,
 });
 
 // let clothMaterial = new THREE.MeshBasicMaterial(0x00ffcc);

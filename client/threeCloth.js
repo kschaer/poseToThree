@@ -41,7 +41,7 @@ let sphere = new THREE.Mesh(
 // });
 // let debugPlane = new THREE.Mesh(planeGeometry, material);
 // scene.add(debugPlane);
-// scene.add(sphere);
+scene.add(sphere);
 // scene.add(axesHelper);
 
 // mouse listener and raycaster to get mouse position into scene
@@ -82,9 +82,9 @@ window.addEventListener('mousemove', onMouseMove, false);
 let DAMPING = 0.03;
 let DRAG = 1 - DAMPING;
 let MASS = 0.1;
-let restDistance = 50;
+let restDistance = 35;
 
-let xSegs = 10;
+let xSegs = 20;
 let ySegs = 10;
 
 let clothFunction = plane(restDistance * xSegs, restDistance * ySegs);
@@ -288,7 +288,9 @@ function simulate(time) {
     p.previous.copy(p.original);
   }
   let movingPin = particles[pins[pins.length - 1]];
-  movingPin.position.copy(spherePosition);
+  // movingPin.position.copy(spherePosition);
+  movingPin.position.set(spherePosition.x, spherePosition.y, 0);
+  console.log('MOVING PIN', movingPin.position);
   // mouse constraint?
 }
 

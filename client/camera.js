@@ -19,7 +19,11 @@ import * as posenet from '@tensorflow-models/posenet';
 import Stats from 'stats.js';
 import {drawKeypoints, drawSkeleton} from './demo_util';
 // import {animate, noseSphere} from './threeScene';
-import {animateCloth} from './threeCloth';
+import {
+  animateCloth,
+  leftWristController,
+  rightWristController,
+} from './threeCloth';
 const videoWidth = 600;
 const videoHeight = 500;
 const docWidth = window.innerWidth;
@@ -129,8 +133,10 @@ function setupFPS() {
 const nose = document.getElementById('nose');
 let nosex;
 let nosey;
-let wristx;
-let wristy;
+let leftWristX;
+let leftWristY;
+let rightWristX;
+let rightWristY;
 function detectPoseInRealTime(video, net) {
   const canvas = document.getElementById('output');
   const ctx = canvas.getContext('2d');
@@ -183,17 +189,25 @@ function detectPoseInRealTime(video, net) {
     nosey = poses[0].keypoints[0].position.y - videoHeight / 2 + docHeight / 2;
     nose.style.left = `${nosex}px`;
     nose.style.top = `${nosey}px`;
-    wristx = poses[0].keypoints[10].position.x - videoWidth / 2 + docWidth / 2;
-    wristy =
+    leftWristX =
+      poses[0].keypoints[10].position.x - videoWidth / 2 + docWidth / 2;
+    leftWristY =
       poses[0].keypoints[10].position.y - videoHeight / 2 + docHeight / 2;
-    // noseSphere(nosex, nosey, wristx, wristy);
-
+    rightWristX =
+      poses[0].keypoints[9].position.x - videoWidth / 2 + docWidth / 2;
+    rightWristY =
+      poses[0].keypoints[9].position.y - videoHeight / 2 + docHeight / 2;
+    // noseSphere(nosex, nosey, leftWristX, leftWristY);
+    // console.log(poses[0].keypoints);
     poses.forEach(({score, keypoints}) => {
       // console.log(keypoints[0].position.x, nosey);
       // console.log(keypoints);
       if (score >= minPoseConfidence) {
         if (guiState.output.showPoints) {
           drawKeypoints(keypoints, minPartConfidence, ctx);
+          // send to THREE
+          leftWristController(leftWristX, leftWristY);
+          rightWristController(rightWristX, rightWristY);
           // animate();
         }
         if (guiState.output.showSkeleton) {
@@ -204,8 +218,7 @@ function detectPoseInRealTime(video, net) {
 
     // End monitoring code for frames per second
     stats.end();
-    // animate();
-    // requestAnimationFrame(animate);
+    // CALL THE THREE ANIMATION
     animateCloth();
     requestAnimationFrame(poseDetectionFrame);
   }

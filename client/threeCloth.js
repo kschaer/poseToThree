@@ -25,22 +25,14 @@ let light = new THREE.DirectionalLight(0xdfebff);
 light.position.set(100, 5, 150);
 scene.add(light);
 
-// sphere for debug
+// -------------------------------------sphere for debug
 // let axesHelper = new THREE.AxesHelper(500);
 let sphereGeometry = new THREE.SphereGeometry(10);
 let sphere = new THREE.Mesh(
   sphereGeometry,
   new THREE.MeshBasicMaterial(0x0ffcc)
 );
-// sphere.position.set(position);
-// plane for debug
-// let planeGeometry = new THREE.PlaneGeometry(500, 500);
-// let material = new THREE.MeshBasicMaterial({
-//   color: 0xffff00,
-//   side: THREE.DoubleSide,
-// });
-// let debugPlane = new THREE.Mesh(planeGeometry, material);
-// scene.add(debugPlane);
+
 scene.add(sphere);
 // scene.add(axesHelper);
 
@@ -49,42 +41,49 @@ const raycaster = new THREE.Raycaster();
 let mouse = new THREE.Vector2();
 let spherePosition = new THREE.Vector3();
 
-// HELPER TO TRANSLATE DOM TO WORLD
+// -----------------------------HELPER TO TRANSLATE DOM TO WORLD
 export const domToWorld = function(x, y) {
   let newPosition = new THREE.Vector3();
   let normalizedX = (x / width) * 2 - 1;
   let normalizedY = ((y - height) / height) * 2 + 1;
-  newPosition.set(normalizedX, normalizedY, 0);
+  newPosition.set(normalizedX, -normalizedY, 0);
   newPosition.unproject(camera);
   let dir = newPosition.sub(camera.position).normalize();
   let distance = -camera.position.z / dir.z;
   let pos = camera.position.clone().add(dir.multiplyScalar(distance));
   return pos;
 };
-
+// ----MOUSE------------------------------------------------
 function onMouseMove(event) {
-  mouse.x = (event.clientX / width) * 2 - 1;
-  mouse.y = ((event.clientY - height) / height) * 2 + 1;
-  spherePosition.set(mouse.x, -mouse.y, 0);
-  spherePosition.unproject(camera);
-  let dir = spherePosition.sub(camera.position).normalize();
-
-  let distance = -camera.position.z / dir.z;
-  let pos = camera.position.clone().add(dir.multiplyScalar(distance));
-
+  let pos = domToWorld(event.clientX, event.clientY);
+  spherePosition.set(pos.x, pos.y, 0);
   sphere.position.set(pos.x, pos.y, 0);
 
-  console.log('FIRINGMOUSEEVENT', sphere.position);
+  // console.log('FIRINGMOUSEEVENT', sphere.position);
 }
 window.addEventListener('mousemove', onMouseMove, false);
+
+// ------------------ RIGHT WRIST
+let rightWrist = new THREE.Vector3();
+export const rightWristController = function(x, y) {
+  let pos = domToWorld(x, y);
+  rightWrist.set(pos.x, pos.y, 0);
+};
+
+// ------------------ LEFT WRIST
+let leftWrist = new THREE.Vector3();
+export const leftWristController = function(x, y) {
+  let pos = domToWorld(x, y);
+  leftWrist.set(pos.x, pos.y, 0);
+};
 
 /* --------------------------------------------START CLOTH HELPERS----- */
 let DAMPING = 0.03;
 let DRAG = 1 - DAMPING;
 let MASS = 0.1;
-let restDistance = 35;
+let restDistance = 18;
 
-let xSegs = 20;
+let xSegs = 15;
 let ySegs = 10;
 
 let clothFunction = plane(restDistance * xSegs, restDistance * ySegs);
@@ -279,18 +278,20 @@ function simulate(time) {
   ballPosition.z = -Math.sin(Date.now() / 600) * 90; // + 40;
   ballPosition.x = Math.cos(Date.now() / 400) * 70;
 
-  for (i = 0, il = pins.length - 1; i < il; i++) {
-    let xy = pins[i];
-    let p = particles[xy];
+  // for (i = 0, il = pins.length - 1; i < il; i++) {
+  //   let xy = pins[i];
+  //   let p = particles[xy];
 
-    // console.log('what is xy?', p);
-    p.position.copy(p.original);
-    p.previous.copy(p.original);
-  }
+  //   // console.log('what is xy?', p);
+  //   p.position.copy(p.original);
+  //   p.previous.copy(p.original);
+  // }
   let movingPin = particles[pins[pins.length - 1]];
   // movingPin.position.copy(spherePosition);
-  movingPin.position.set(spherePosition.x, spherePosition.y, 0);
-  console.log('MOVING PIN', movingPin.position);
+  movingPin.position.set(rightWrist.x, rightWrist.y, 0);
+  let movingLeftPin = particles[pins[0]];
+  movingLeftPin.position.set(leftWrist.x, leftWrist.y, 0);
+  // console.log('MOVING PIN', movingPin.position);
   // mouse constraint?
 }
 

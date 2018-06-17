@@ -203,6 +203,7 @@ function detectPoseInRealTime(video, net) {
       rightWristY =
         poses[0].keypoints[9].position.y - videoHeight / 2 + docHeight / 2;
     }
+    /*
     // conditional logic to help filter out bad pose detection
     // if we have a prior point value and the new point value is not vastly different from the prior value, we can send
     if (
@@ -236,7 +237,15 @@ function detectPoseInRealTime(video, net) {
       rightWristY =
         poses[0].keypoints[9].position.y - videoHeight / 2 + docHeight / 2;
     } // else we don't reset the points
-
+    */
+    leftWristX =
+      poses[0].keypoints[10].position.x - videoWidth / 2 + docWidth / 2;
+    leftWristY =
+      poses[0].keypoints[10].position.y - videoHeight / 2 + docHeight / 2;
+    rightWristX =
+      poses[0].keypoints[9].position.x - videoWidth / 2 + docWidth / 2;
+    rightWristY =
+      poses[0].keypoints[9].position.y - videoHeight / 2 + docHeight / 2;
     // noseSphere(nosex, nosey, leftWristX, leftWristY);
     // console.log(poses[0].keypoints);
     poses.forEach(({score, keypoints}) => {

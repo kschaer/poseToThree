@@ -1,4 +1,4 @@
-export const BiquadFilterInstance = (() => {
+const BiquadFilterInstance = (() => {
   class BiquadFilterInstance {
     constructor(fc) {
       this.Fc = 0.5;

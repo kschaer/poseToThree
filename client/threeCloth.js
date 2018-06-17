@@ -8,7 +8,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 const width = window.innerWidth;
 const height = window.innerHeight;
 // IMAGES FOR TEXTURES -----------
-const fabricImg = require('./icelandic.png');
+const fabricImg = require('../public/knit.jpg');
 // const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
 const camera = new THREE.PerspectiveCamera(
   30,
@@ -28,6 +28,8 @@ scene.add(new THREE.AmbientLight(0x000000));
 let light = new THREE.DirectionalLight(0xdfebff);
 light.position.set(100, 5, 150);
 scene.add(light);
+
+// postprocessing
 
 // -------------------------------------sphere for debug
 // let axesHelper = new THREE.AxesHelper(500);

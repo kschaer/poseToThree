@@ -86,13 +86,13 @@ const guiState = {
   algorithm: 'single-pose',
   input: {
     // mobileNetArchitecture: isMobile() ? '0.50' : '0.75',
-    mobileNetArchitecture: 1.0,
+    mobileNetArchitecture: 0.75,
     outputStride: 16,
     imageScaleFactor: 0.3,
   },
   singlePoseDetection: {
     minPoseConfidence: 0.25,
-    minPartConfidence: 0.25,
+    minPartConfidence: 0.5,
   },
   multiPoseDetection: {
     maxPoseDetections: 5,

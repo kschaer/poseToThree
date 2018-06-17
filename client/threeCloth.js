@@ -26,28 +26,28 @@ light.position.set(100, 5, 150);
 scene.add(light);
 
 // sphere for debug
-let axesHelper = new THREE.AxesHelper(500);
+// let axesHelper = new THREE.AxesHelper(500);
 let sphereGeometry = new THREE.SphereGeometry(10);
 let sphere = new THREE.Mesh(
   sphereGeometry,
   new THREE.MeshBasicMaterial(0x0ffcc)
 );
 // sphere.position.set(position);
-let planeGeometry = new THREE.PlaneGeometry(500, 500);
-let material = new THREE.MeshBasicMaterial({
-  color: 0xffff00,
-  side: THREE.DoubleSide,
-});
-let debugPlane = new THREE.Mesh(planeGeometry, material);
-scene.add(debugPlane);
-scene.add(sphere);
-scene.add(axesHelper);
+// plane for debug
+// let planeGeometry = new THREE.PlaneGeometry(500, 500);
+// let material = new THREE.MeshBasicMaterial({
+//   color: 0xffff00,
+//   side: THREE.DoubleSide,
+// });
+// let debugPlane = new THREE.Mesh(planeGeometry, material);
+// scene.add(debugPlane);
+// scene.add(sphere);
+// scene.add(axesHelper);
 
 // mouse listener and raycaster to get mouse position into scene
 const raycaster = new THREE.Raycaster();
 let mouse = new THREE.Vector2();
 let spherePosition = new THREE.Vector3();
-let mousePos;
 function onMouseMove(event) {
   console.log('YYYYYY', event.clientY);
   mouse.x = (event.clientX / width) * 2 - 1;
@@ -97,7 +97,7 @@ let TIMESTEP = 18 / 1000;
 let TIMESTEP_SQ = TIMESTEP * TIMESTEP;
 // **************  INITIAL PINS- */
 let pins = [0, cloth.w];
-
+// let pins = [0];
 let wind = true;
 // let windStrength = 2;
 let windForce = new THREE.Vector3(0, 0, 0);
@@ -307,7 +307,15 @@ function simulate(time) {
 
   // Pin Constraints
 
-  for (i = 0, il = pins.length; i < il; i++) {
+  // for (i = 0, il = pins.length; i < il; i++) {
+  //   let xy = pins[i];
+  //   let p = particles[xy];
+
+  //   // console.log('what is xy?', p);
+  //   p.position.copy(p.original);
+  //   p.previous.copy(p.original);
+  // }
+  for (i = 0, il = pins.length - 1; i < il; i++) {
     let xy = pins[i];
     let p = particles[xy];
 
@@ -315,6 +323,8 @@ function simulate(time) {
     p.position.copy(p.original);
     p.previous.copy(p.original);
   }
+  let movingPin = particles[pins[pins.length - 1]];
+  movingPin.position.copy(spherePosition);
   // mouse constraint?
 }
 

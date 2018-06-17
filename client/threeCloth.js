@@ -13,9 +13,9 @@ const camera = new THREE.PerspectiveCamera(
   10000
 );
 // camera.position.z = 5;
-camera.position.set(1000, 50, 1500);
-camera.up = new THREE.Vector3(0, 1, 0);
-camera.lookAt(125, 125, 0);
+camera.position.set(0, 0, 1500);
+// camera.up = new THREE.Vector3(0, 1, 0);
+camera.lookAt(0, 0, 0);
 
 document.getElementById('three').appendChild(renderer.domElement);
 
@@ -27,7 +27,7 @@ scene.add(light);
 
 // sphere for debug
 let axesHelper = new THREE.AxesHelper(500);
-let sphereGeometry = new THREE.SphereGeometry(100);
+let sphereGeometry = new THREE.SphereGeometry(10);
 let sphere = new THREE.Mesh(
   sphereGeometry,
   new THREE.MeshBasicMaterial(0x0ffcc)
@@ -46,19 +46,30 @@ scene.add(axesHelper);
 // mouse listener and raycaster to get mouse position into scene
 const raycaster = new THREE.Raycaster();
 let mouse = new THREE.Vector2();
-// let spherePosition = new THREE.Vector3();
+let spherePosition = new THREE.Vector3();
 let mousePos;
 function onMouseMove(event) {
+  console.log('YYYYYY', event.clientY);
   mouse.x = (event.clientX / width) * 2 - 1;
-  mouse.y = (event.clientY / height) * 2 + 1;
+  mouse.y = ((event.clientY - height) / height) * 2 + 1;
   // spherePosition.set()
+  spherePosition.set(mouse.x, -mouse.y, 0);
+  spherePosition.unproject(camera);
+  console.log('pre normalize', spherePosition);
+  let dir = spherePosition.sub(camera.position).normalize();
+  console.log('after normalize', spherePosition);
 
-  let vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
-  vector.unproject(camera);
-  let mouseDir = vector.sub(camera.position).normalize();
-  let mouseDist = -camera.position.z / mouseDir.z;
-  mousePos = camera.position.clone().add(mouseDir.multiplyScalar(mouseDist));
-  sphere.position.set(-mousePos.x, mousePos.y, 0);
+  let distance = -camera.position.z / dir.z;
+  let pos = camera.position.clone().add(dir.multiplyScalar(distance));
+  console.log(pos);
+  // let vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
+  // vector.unproject(camera);
+  // let mouseDir = vector.sub(camera.position).normalize();
+  // let mouseDist = -camera.position.z / mouseDir.z;
+  // mousePos = camera.position.clone().add(mouseDir.multiplyScalar(mouseDist));
+
+  // sphere.position.set(pos.x, pos.y + height / 1.5 + 55, 0);
+  sphere.position.set(pos.x, pos.y, 0);
 
   // clothMesh.position.copy(pos);
   // console.log(mouse.x, mouse.y);
@@ -380,7 +391,6 @@ function render() {
   clothGeometry.computeFaceNormals();
   clothGeometry.computeVertexNormals();
   // camera.lookAt(cloth.particles[0].position);
-  console.log(cloth.particles[0].position);
   // now send to renderer
   renderer.render(scene, camera);
 }

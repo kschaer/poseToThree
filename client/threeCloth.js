@@ -48,31 +48,32 @@ let sphere = new THREE.Mesh(
 const raycaster = new THREE.Raycaster();
 let mouse = new THREE.Vector2();
 let spherePosition = new THREE.Vector3();
+
+// HELPER TO TRANSLATE DOM TO WORLD
+export const domToWorld = function(x, y) {
+  let newPosition = new THREE.Vector3();
+  let normalizedX = (x / width) * 2 - 1;
+  let normalizedY = ((y - height) / height) * 2 + 1;
+  newPosition.set(normalizedX, normalizedY, 0);
+  newPosition.unproject(camera);
+  let dir = newPosition.sub(camera.position).normalize();
+  let distance = -camera.position.z / dir.z;
+  let pos = camera.position.clone().add(dir.multiplyScalar(distance));
+  return pos;
+};
+
 function onMouseMove(event) {
-  console.log('YYYYYY', event.clientY);
   mouse.x = (event.clientX / width) * 2 - 1;
   mouse.y = ((event.clientY - height) / height) * 2 + 1;
-  // spherePosition.set()
   spherePosition.set(mouse.x, -mouse.y, 0);
   spherePosition.unproject(camera);
-  console.log('pre normalize', spherePosition);
   let dir = spherePosition.sub(camera.position).normalize();
-  console.log('after normalize', spherePosition);
 
   let distance = -camera.position.z / dir.z;
   let pos = camera.position.clone().add(dir.multiplyScalar(distance));
-  console.log(pos);
-  // let vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
-  // vector.unproject(camera);
-  // let mouseDir = vector.sub(camera.position).normalize();
-  // let mouseDist = -camera.position.z / mouseDir.z;
-  // mousePos = camera.position.clone().add(mouseDir.multiplyScalar(mouseDist));
 
-  // sphere.position.set(pos.x, pos.y + height / 1.5 + 55, 0);
   sphere.position.set(pos.x, pos.y, 0);
 
-  // clothMesh.position.copy(pos);
-  // console.log(mouse.x, mouse.y);
   console.log('FIRINGMOUSEEVENT', sphere.position);
 }
 window.addEventListener('mousemove', onMouseMove, false);
@@ -81,7 +82,7 @@ window.addEventListener('mousemove', onMouseMove, false);
 let DAMPING = 0.03;
 let DRAG = 1 - DAMPING;
 let MASS = 0.1;
-let restDistance = 25;
+let restDistance = 50;
 
 let xSegs = 10;
 let ySegs = 10;
@@ -277,44 +278,7 @@ function simulate(time) {
 
   ballPosition.z = -Math.sin(Date.now() / 600) * 90; // + 40;
   ballPosition.x = Math.cos(Date.now() / 400) * 70;
-  /*
-  if (sphere.visible) {
-    for (
-      particles = cloth.particles, i = 0, il = particles.length;
-      i < il;
-      i++
-    ) {
-      particle = particles[i];
-      let pos = particle.position;
-      diff.subVectors(pos, ballPosition);
-      if (diff.length() < ballSize) {
-        // collided
-        diff.normalize().multiplyScalar(ballSize);
-        pos.copy(ballPosition).add(diff);
-      }
-    }
-  }*/
 
-  // Floor Constraints
-
-  // for (particles = cloth.particles, i = 0, il = particles.length; i < il; i++) {
-  //   particle = particles[i];
-  //   pos = particle.position;
-  //   if (pos.y < -250) {
-  //     pos.y = -250;
-  //   }
-  // }
-
-  // Pin Constraints
-
-  // for (i = 0, il = pins.length; i < il; i++) {
-  //   let xy = pins[i];
-  //   let p = particles[xy];
-
-  //   // console.log('what is xy?', p);
-  //   p.position.copy(p.original);
-  //   p.previous.copy(p.original);
-  // }
   for (i = 0, il = pins.length - 1; i < il; i++) {
     let xy = pins[i];
     let p = particles[xy];

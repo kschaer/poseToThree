@@ -90,7 +90,7 @@ const guiState = {
     imageScaleFactor: 0.3,
   },
   singlePoseDetection: {
-    minPoseConfidence: 0.1,
+    minPoseConfidence: 0.2,
     minPartConfidence: 0.5,
   },
   multiPoseDetection: {

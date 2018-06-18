@@ -151,9 +151,9 @@ function setupFPS() {
  * Feeds an image to posenet to estimate poses - this is where the magic
  * happens. This function loops with a requestAnimationFrame method.
  */
-const nose = document.getElementById('nose');
-let nosex;
-let nosey;
+// const nose = document.getElementById('nose');
+// let nosex;
+// let nosey;
 let leftWristX = 0;
 let leftWristY = 0;
 let rightWristX = 0;
@@ -239,10 +239,10 @@ function detectPoseInRealTime(video, net) {
     // and draw the resulting skeleton and keypoints if over certain confidence
     // scores
 
-    nosex = poses[0].keypoints[0].position.x - videoWidth / 2 + docWidth / 2;
-    nosey = poses[0].keypoints[0].position.y - videoHeight / 2 + docHeight / 2;
-    nose.style.left = `${nosex}px`;
-    nose.style.top = `${nosey}px`;
+    // nosex = poses[0].keypoints[0].position.x - videoWidth / 2 + docWidth / 2;
+    // nosey = poses[0].keypoints[0].position.y - videoHeight / 2 + docHeight / 2;
+    // nose.style.left = `${nosex}px`;
+    // nose.style.top = `${nosey}px`;
     // if we don't have points yet, find them:
     if (!leftWristX || !leftWristY) {
       leftWristX =

@@ -85,6 +85,35 @@
   align-items: center; /* center items horizontally, in this case */
   height: 300px;
 }
+#footy {
+  display: flex;
+  font-family: Arial;
+  color: rgb(240, 152, 152);
+  display: inline-flex;
+  text-align: center;
+  font-size: 25px;
+  font-family: Monaco, Consolas, "Lucida Console", monospace;
+  z-index: 50;
+  position: fixed;
+  bottom: 10vh;
+}
+.inline {
+  display: inline-block;
+}
+/* .container--inline-flex {
+  display: inline-flex;
+  font-family: Arial;
+  color: rgb(240, 152, 152);
+  font-size: 25px;
+  font-family: Monaco, Consolas, "Lucida Console", monospace;
+  z-index: 50;
+  bottom: 10vh;
+} */
+.flex-child {
+  flex: 1;
+  min-width: 50px;
+  min-height: 50px;
+}
 
 #typey {
   /* width: 300px; */

@@ -50,15 +50,16 @@ let typerOptions = {
   strings: [
     'welcome',
     'this is an experiment by Kaitlin Schaer',
-    'playing with gesture in the browser',
-    'turn on your webcam and play',
+    'playing with pose and gesture in the browser',
+    'turn on your webcam to interact',
     ':)',
+    'poseToThree.js',
   ],
   typeSpeed: 40,
   loop: false,
   showCursor: true,
   cursorChar: '|',
-  backDelay: 500,
+  backDelay: 1000,
 };
 let typer = new Typed('.typer', typerOptions);
 

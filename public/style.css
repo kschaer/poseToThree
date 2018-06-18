@@ -72,7 +72,7 @@
   color: white;
   white-space: pre;
   /* display: inline; */
-  font-size: 25px;
+  font-size: 36px;
   margin-top: 10vh;
   font-family: Monaco, Consolas, "Lucida Console", monospace;
   z-index: 50;
@@ -88,10 +88,10 @@
 #footy {
   display: flex;
   font-family: Arial;
-  color: rgb(240, 152, 152);
+  color: lightgray;
   display: inline-flex;
   text-align: center;
-  font-size: 25px;
+  font-size: 28px;
   font-family: Monaco, Consolas, "Lucida Console", monospace;
   z-index: 50;
   position: fixed;
@@ -113,10 +113,20 @@
   flex: 1;
   min-width: 50px;
   min-height: 50px;
+  width: 50vw;
 }
 
 #typey {
   /* width: 300px; */
   margin: 5px;
   text-align: center; /* will center text in <p>, which is not a flex item */
+}
+
+a:link {
+  color: white;
+}
+
+/* visited link */
+a:visited {
+  color: lightgray;
 }

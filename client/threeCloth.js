@@ -48,7 +48,7 @@ let sphere = new THREE.Mesh(
   new THREE.MeshBasicMaterial({color: 0x00ff00})
 );
 
-scene.add(sphere);
+// scene.add(sphere);
 // scene.add(axesHelper);
 
 // mouse listener and raycaster to get mouse position into scene
@@ -95,11 +95,11 @@ export const leftWristController = function(x, y) {
 /* --------------------------------------------START CLOTH HELPERS----- */
 let DAMPING = 0.03;
 let DRAG = 1 - DAMPING;
-let MASS = 0.1;
-let restDistance = 18;
+let MASS = 0.05;
+let restDistance = 15;
 
 let xSegs = 15;
-let ySegs = 10;
+let ySegs = 15;
 
 let clothFunction = plane(restDistance * xSegs, restDistance * ySegs);
 
@@ -363,7 +363,7 @@ export function animateCloth() {
   // console.log(raycaster);
   // simulate wind
   let time = Date.now();
-  let windStrength = Math.sin(time / 10000) * 20;
+  let windStrength = Math.sin(time / 10000) * 40;
   windForce.set(
     Math.sin(time / 2000),
     Math.cos(time / 3000),

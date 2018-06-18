@@ -48,15 +48,17 @@ function isMobile() {
 
 let typerOptions = {
   strings: [
-    'hello',
-    'goodbye',
-    'threeeeee',
+    'welcome',
     'this is an experiment by Kaitlin Schaer',
+    'playing with gesture in the browser',
+    'turn on your webcam and play',
+    ':)',
   ],
   typeSpeed: 40,
   loop: false,
   showCursor: true,
   cursorChar: '|',
+  backDelay: 500,
 };
 let typer = new Typed('.typer', typerOptions);
 

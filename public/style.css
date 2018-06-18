@@ -37,10 +37,58 @@
 #footfoot {
   z-index: 0;
 }
+/* #typecontainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vh;
+}
 
-#typey {
+/* #typey {
+  margin: 0 auto;
+  text-align: center;
+  margin-top: 10vh;
   color: white;
   font-size: 32px;
   font-family: Monaco, Consolas, "Lucida Console", monospace;
   z-index: 40;
+} */
+/* #typey {
+  width: auto;
+  margin-top: 10vh;
+  text-align: center;
+  color: white;
+  font-size: 32px;
+  font-family: Monaco, Consolas, "Lucida Console", monospace;
+  z-index: 40;
+} */
+*/ .center {
+  height: 400px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.typer #typey {
+  font-family: Arial;
+  font-size: 25px;
+  margin: 0 auto;
+  width: 200px;
+  margin-top: 100px;
+  z-index: 50;
+}
+
+.container {
+  display: flex; /* establish flex container */
+  flex-direction: column; /* make main axis vertical */
+  justify-content: center; /* center items vertically, in this case */
+  align-items: center; /* center items horizontally, in this case */
+  height: 300px;
+}
+
+#typey {
+  /* width: 300px; */
+  margin: 5px;
+  text-align: center; /* will center text in <p>, which is not a flex item */
 }

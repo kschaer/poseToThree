@@ -24,6 +24,9 @@ import {
   leftWristController,
   rightWristController,
 } from './threeCloth';
+import ESS from 'exponential-smoothing-stream';
+import {buffer} from '@tensorflow/tfjs';
+
 const videoWidth = 600;
 const videoHeight = 500;
 const docWidth = window.innerWidth;
@@ -138,6 +141,39 @@ let leftWristX = 0;
 let leftWristY = 0;
 let rightWristX = 0;
 let rightWristY = 0;
+// set up our data streams for smoothing the points
+// let streamLX = new ESS({
+//   smoothingFactor: 0.5,
+//   initialStrategy: new ESS.strategies.InitialStrategyMedian(5),
+// });
+// let streamLY = new ESS({
+//   smoothingFactor: 0.5,
+//   initialStrategy: new ESS.strategies.InitialStrategyMedian(5),
+// });
+// let streamRX = new ESS({
+//   smoothingFactor: 0.5,
+//   initialStrategy: new ESS.strategies.InitialStrategyMedian(5),
+// });
+// let streamRY = new ESS({
+//   smoothingFactor: 0.5,
+//   initialStrategy: new ESS.strategies.InitialStrategyMedian(5),
+// });
+// streamLX.
+// make a moving average queue:
+const maxBuffer = 10;
+const reducer = (a, b) => a + b;
+const reduceAvg = function(arr) {
+  return arr.reduce(reducer) / arr.length;
+};
+let bufferLX = [];
+let bufferLY = [];
+let bufferRX = [];
+let bufferRY = [];
+let avgLX;
+let avgLY;
+let avgRX;
+let avgRY;
+
 function detectPoseInRealTime(video, net) {
   const canvas = document.getElementById('output');
   const ctx = canvas.getContext('2d');
@@ -203,41 +239,6 @@ function detectPoseInRealTime(video, net) {
       rightWristY =
         poses[0].keypoints[9].position.y - videoHeight / 2 + docHeight / 2;
     }
-    /*
-    // conditional logic to help filter out bad pose detection
-    // if we have a prior point value and the new point value is not vastly different from the prior value, we can send
-    if (
-      leftWristX &&
-      leftWristY &&
-      Math.abs(
-        leftWristX -
-          poses[0].keypoints[10].position.x -
-          videoWidth / 2 +
-          docWidth / 2
-      ) < 100
-    ) {
-      console.log('RESETTING LEFT');
-      leftWristX =
-        poses[0].keypoints[10].position.x - videoWidth / 2 + docWidth / 2;
-      leftWristY =
-        poses[0].keypoints[10].position.y - videoHeight / 2 + docHeight / 2;
-    } // else we don't reset the points
-    if (
-      rightWristX &&
-      rightWristY &&
-      Math.abs(
-        rightWristX -
-          poses[0].keypoints[9].position.x -
-          videoWidth / 2 +
-          docWidth / 2
-      ) < 100
-    ) {
-      rightWristX =
-        poses[0].keypoints[9].position.x - videoWidth / 2 + docWidth / 2;
-      rightWristY =
-        poses[0].keypoints[9].position.y - videoHeight / 2 + docHeight / 2;
-    } // else we don't reset the points
-    */
     leftWristX =
       poses[0].keypoints[10].position.x - videoWidth / 2 + docWidth / 2;
     leftWristY =
@@ -246,6 +247,32 @@ function detectPoseInRealTime(video, net) {
       poses[0].keypoints[9].position.x - videoWidth / 2 + docWidth / 2;
     rightWristY =
       poses[0].keypoints[9].position.y - videoHeight / 2 + docHeight / 2;
+
+    if (bufferLX.length > maxBuffer) {
+      // shift off first ele:
+      bufferLX.shift();
+      bufferLY.shift();
+      bufferRX.shift();
+      bufferRY.shift();
+    }
+    // push latest pose coords to their arrays
+    bufferLX.push(leftWristX);
+    bufferLY.push(leftWristY);
+    bufferRX.push(rightWristX);
+    bufferRY.push(rightWristY);
+    // calculate avgs in the buffers
+    if (bufferLX.length) {
+      avgLX = reduceAvg(bufferLX);
+      avgLY = reduceAvg(bufferLY);
+      avgRX = reduceAvg(bufferRX);
+      avgRY = reduceAvg(bufferRY);
+    } else {
+      avgLX = leftWristX;
+      avgLY = leftWristY;
+      avgRX = rightWristX;
+      avgRY = rightWristY;
+    }
+
     // noseSphere(nosex, nosey, leftWristX, leftWristY);
     // console.log(poses[0].keypoints);
     poses.forEach(({score, keypoints}) => {
@@ -255,8 +282,12 @@ function detectPoseInRealTime(video, net) {
         if (guiState.output.showPoints) {
           drawKeypoints(keypoints, minPartConfidence, ctx);
           // send to THREE
-          leftWristController(leftWristX, leftWristY);
-          rightWristController(rightWristX, rightWristY);
+          // leftWristController(leftWristX, leftWristY);
+          // rightWristController(rightWristX, rightWristY);
+          // console.log('AVGGG', avgLX, avgLY);
+          console.log(bufferLX);
+          leftWristController(avgLX, avgLY);
+          rightWristController(avgRX, avgRY);
           // animate();
         }
         if (guiState.output.showSkeleton) {

@@ -42,4 +42,5 @@
   color: white;
   font-size: 32px;
   font-family: Monaco, Consolas, "Lucida Console", monospace;
+  z-index: 40;
 }

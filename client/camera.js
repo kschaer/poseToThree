@@ -24,8 +24,9 @@ import {
   leftWristController,
   rightWristController,
 } from './threeCloth';
-import ESS from 'exponential-smoothing-stream';
-import {buffer} from '@tensorflow/tfjs';
+import Typed from 'typed.js';
+// import ESS from 'exponential-smoothing-stream';
+// import {buffer} from '@tensorflow/tfjs';
 
 const videoWidth = 600;
 const videoHeight = 500;
@@ -44,6 +45,20 @@ function isiOS() {
 function isMobile() {
   return isAndroid() || isiOS();
 }
+
+let typerOptions = {
+  strings: [
+    'hello',
+    'goodbye',
+    'threeeeee',
+    'this is an experiment by Kaitlin Schaer',
+  ],
+  typeSpeed: 40,
+  loop: false,
+  showCursor: true,
+  cursorChar: '|',
+};
+let typer = new Typed('.typer', typerOptions);
 
 /**
  * Loads a the camera to be used in the demo
@@ -285,7 +300,6 @@ function detectPoseInRealTime(video, net) {
           // leftWristController(leftWristX, leftWristY);
           // rightWristController(rightWristX, rightWristY);
           // console.log('AVGGG', avgLX, avgLY);
-          console.log(bufferLX);
           leftWristController(avgLX, avgLY);
           rightWristController(avgRX, avgRY);
           // animate();

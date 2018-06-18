@@ -37,3 +37,9 @@
 #footfoot {
   z-index: 0;
 }
+
+#typey {
+  color: white;
+  font-size: 32px;
+  font-family: Monaco, Consolas, "Lucida Console", monospace;
+}

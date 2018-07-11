@@ -11,7 +11,7 @@ const height = window.innerHeight;
 // POST
 
 // IMAGES FOR TEXTURES -----------
-const fabricImg = require('../public/knit.jpg');
+// const fabricImg = require('../public/knit.jpg');
 // const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
 const camera = new THREE.PerspectiveCamera(
   30,
@@ -42,13 +42,14 @@ scene.add(light);
 
 // -------------------------------------sphere for debug
 // let axesHelper = new THREE.AxesHelper(500);
-let sphereGeometry = new THREE.SphereGeometry(10);
-let sphere = new THREE.Mesh(
-  sphereGeometry,
-  new THREE.MeshBasicMaterial({color: 0x00ff00})
-);
+// let sphereGeometry = new THREE.SphereGeometry(10);
+// let sphere = new THREE.Mesh(
+//   sphereGeometry,
+//   new THREE.MeshBasicMaterial({color: 0x00ff00})
+// );
 
 // scene.add(sphere);
+// axes for debug
 // scene.add(axesHelper);
 
 // mouse listener and raycaster to get mouse position into scene
@@ -92,7 +93,7 @@ export const leftWristController = function(x, y) {
   leftWrist.set(pos.x, pos.y, 0);
 };
 
-/* --------------------------------------------START CLOTH HELPERS----- */
+/* --------------------------------------------CLOTH----- */
 let DAMPING = 0.03;
 let DRAG = 1 - DAMPING;
 let MASS = 0.05;
@@ -118,7 +119,6 @@ let wind = true;
 let windForce = new THREE.Vector3(0, 0, 0);
 
 let ballPosition = new THREE.Vector3(0, -45, 0);
-let ballSize = 60; // 40
 
 let tmpForce = new THREE.Vector3();
 
@@ -188,7 +188,8 @@ function Cloth(w, h) {
   let particles = [];
   let constraints = [];
 
-  let u, v;
+  let u;
+  let v;
 
   // Create particles
   for (v = 0; v <= h; v++) {
@@ -246,14 +247,23 @@ function simulate(time) {
     return;
   }
 
-  let i, il, particles, particle, pt, constraints, constraint;
+  // let i, il, particles, particle, constraints, constraint;
+  let i;
+  let il;
+  let particles;
+  let particle;
+  let constraints;
+  let constraint;
 
   // Aerodynamics forces
 
   if (wind) {
-    let face,
-      faces = clothGeometry.faces,
-      normal;
+    // let face,
+    //   faces = clothGeometry.faces,
+    //   normal;
+    let face;
+    let faces = clothGeometry.faces;
+    let normal;
 
     particles = cloth.particles;
 
@@ -315,9 +325,7 @@ function simulate(time) {
   // mouse constraint?
 }
 
-/* ---------------------------------------------END CLOTH HELPERS---- */
-
-// let material = new THREE.MeshPhongMaterial({color: 0x22ffcc});
+/* ---------------------------------------------END CLOTH SETUP---- */
 
 // expect hands as an object:
 /*
@@ -328,17 +336,16 @@ hands = {
 */
 export function clothController(hands) {}
 // set up the cloth
-let loader = new THREE.TextureLoader();
-let clothTexture = loader.load(fabricImg);
-clothTexture.anisotropy = 16;
+// let loader = new THREE.TextureLoader();
+// let clothTexture = loader.load(fabricImg);
+// clothTexture.anisotropy = 16;
 let clothMaterial = new THREE.MeshLambertMaterial({
-  map: clothTexture,
+  // map: clothTexture,
   side: THREE.DoubleSide,
   alphaTest: 0.5,
-  // color: 0x00ffcc,
+  color: 0xccd2dd,
 });
 
-// let clothMaterial = new THREE.MeshBasicMaterial(0x00ffcc);
 let clothGeometry = new THREE.ParametricGeometry(
   clothFunction,
   cloth.w,
@@ -350,7 +357,7 @@ clothMesh.position.set(0, 0, 0);
 scene.add(clothMesh);
 clothMesh.customDepthMaterial = new THREE.MeshDepthMaterial({
   depthPacking: THREE.RGBADepthPacking,
-  map: clothTexture,
+  // map: clothTexture,
   alphaTest: 0.5,
 });
 

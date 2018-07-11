@@ -15,18 +15,14 @@
  * =============================================================================
  */
 import * as posenet from '@tensorflow-models/posenet';
-// import dat from 'dat.gui';
 import Stats from 'stats.js';
 import {drawKeypoints, drawSkeleton} from './demo_util';
-// import {animate, noseSphere} from './threeScene';
 import {
   animateCloth,
   leftWristController,
   rightWristController,
 } from './threeCloth';
 import Typed from 'typed.js';
-// import ESS from 'exponential-smoothing-stream';
-// import {buffer} from '@tensorflow/tfjs';
 
 const videoWidth = 600;
 const videoHeight = 500;
@@ -152,31 +148,12 @@ function setupFPS() {
  * Feeds an image to posenet to estimate poses - this is where the magic
  * happens. This function loops with a requestAnimationFrame method.
  */
-// const nose = document.getElementById('nose');
-// let nosex;
-// let nosey;
+
 let leftWristX = 0;
 let leftWristY = 0;
 let rightWristX = 0;
 let rightWristY = 0;
-// set up our data streams for smoothing the points
-// let streamLX = new ESS({
-//   smoothingFactor: 0.5,
-//   initialStrategy: new ESS.strategies.InitialStrategyMedian(5),
-// });
-// let streamLY = new ESS({
-//   smoothingFactor: 0.5,
-//   initialStrategy: new ESS.strategies.InitialStrategyMedian(5),
-// });
-// let streamRX = new ESS({
-//   smoothingFactor: 0.5,
-//   initialStrategy: new ESS.strategies.InitialStrategyMedian(5),
-// });
-// let streamRY = new ESS({
-//   smoothingFactor: 0.5,
-//   initialStrategy: new ESS.strategies.InitialStrategyMedian(5),
-// });
-// streamLX.
+
 // make a moving average queue:
 const maxBuffer = 10;
 const reducer = (a, b) => a + b;
@@ -204,10 +181,7 @@ function detectPoseInRealTime(video, net) {
   async function poseDetectionFrame() {
     // Begin monitoring code for frames per second
     stats.begin();
-    // threejs cube animation
-    // animate();
-    // Scale an image down to a certain factor. Too large of an image will slow
-    // down the GPU
+
     const imageScaleFactor = guiState.input.imageScaleFactor;
     const outputStride = +guiState.input.outputStride;
 
@@ -236,14 +210,6 @@ function detectPoseInRealTime(video, net) {
       ctx.restore();
     }
 
-    // For each pose (i.e. person) detected in an image, loop through the poses
-    // and draw the resulting skeleton and keypoints if over certain confidence
-    // scores
-
-    // nosex = poses[0].keypoints[0].position.x - videoWidth / 2 + docWidth / 2;
-    // nosey = poses[0].keypoints[0].position.y - videoHeight / 2 + docHeight / 2;
-    // nose.style.left = `${nosex}px`;
-    // nose.style.top = `${nosey}px`;
     // if we don't have points yet, find them:
     if (!leftWristX || !leftWristY) {
       leftWristX =
@@ -291,21 +257,13 @@ function detectPoseInRealTime(video, net) {
       avgRY = rightWristY;
     }
 
-    // noseSphere(nosex, nosey, leftWristX, leftWristY);
-    // console.log(poses[0].keypoints);
     poses.forEach(({score, keypoints}) => {
-      // console.log(keypoints[0].position.x, nosey);
-      // console.log(keypoints);
       if (score >= minPoseConfidence) {
         if (guiState.output.showPoints) {
           drawKeypoints(keypoints, minPartConfidence, ctx);
           // send to THREE
-          // leftWristController(leftWristX, leftWristY);
-          // rightWristController(rightWristX, rightWristY);
-          // console.log('AVGGG', avgLX, avgLY);
           leftWristController(avgLX, avgLY);
           rightWristController(avgRX, avgRY);
-          // animate();
         }
         if (guiState.output.showSkeleton) {
           drawSkeleton(keypoints, minPartConfidence, ctx);
@@ -323,10 +281,6 @@ function detectPoseInRealTime(video, net) {
   poseDetectionFrame();
 }
 
-/**
- * Kicks off the demo by loading the posenet model, finding and loading
- * available camera devices, and setting off the detectPoseInRealTime function.
- */
 export async function bindPage() {
   // Load the PoseNet model weights with architecture 0.75
   const net = await posenet.load(0.75);
